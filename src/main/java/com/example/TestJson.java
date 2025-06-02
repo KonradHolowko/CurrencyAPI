@@ -1,5 +1,7 @@
 package com.example;
 import org.json.JSONObject;
+
+import java.io.LineNumberReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
@@ -70,7 +72,10 @@ public class TestJson {
 
 
 
-            getCurrencyRate("https://api.nbp.pl/api/exchangerates/rates/A/USD/2025-04-01/?format=json");
+
+            String date = "2025-04-04";
+            getCurrencyRate("https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json");
+
 
 
 
@@ -121,12 +126,34 @@ public class TestJson {
             JSONArray innerArray = outerArray.getJSONArray("rates");
             JSONObject obj = innerArray.getJSONObject(0);
 
-            System.out.println("Currency: " + outerArray.get("currency") + " " + outerArray.get("code"));
+            System.out.println("\nCurrency: " + outerArray.get("currency") + " " + outerArray.get("code"));
             System.out.println("Exchange rate: " + obj.get("mid"));
-            System.out.println("Date: " + obj.get("effectiveDate"));
+            System.out.println("Date: " + obj.get("effectiveDate") + "\n");
         }
+
+        //Date to date
         else{
-            System.out.println("something else");
+
+            //User must choose which currency to show
+            String chosenCurrency = "USD";
+
+            JSONArray outerArray = new JSONArray(content.toString());
+            JSONObject obj = outerArray.getJSONObject(0);
+            JSONArray innerArray = obj.getJSONArray("rates");
+
+            for(int i = 0; i < 35; i++){
+                String curName = innerArray.getJSONObject(i).getString("code");
+                if(curName.equals(chosenCurrency)){
+                    System.out.println(curName);
+                }
+            }
+
+
+
+
+
+
+
         }
 
 
