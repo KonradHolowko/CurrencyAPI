@@ -5,7 +5,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
+
 import org.json.JSONArray;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class TestJson {
@@ -70,12 +77,10 @@ public class TestJson {
 //            https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json
 
 
-
-
-            String date = "2025-04-04";
-            getCurrencyRate("https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json");
-
-
+            String date1 = "2025-03-01";
+            String date2 = "2025-05-02";
+            String link = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%s/%s/?format=json", date1, date2);
+            getCurrencyRate(link);
 
 
 
@@ -132,22 +137,8 @@ public class TestJson {
 
         //Date to date
         else{
-
             //User must choose which currency to show
             String chosenCurrency = "USD";
-
-            JSONArray outerArray = new JSONArray(content.toString());
-            JSONObject obj = outerArray.getJSONObject(0);
-            JSONArray innerArray = obj.getJSONArray("rates");
-
-            JSONObject rates = innerArray.getJSONObject(0);
-            String currName = rates.getString("code");
-            String mid = String.valueOf(rates.getDouble("mid"));
-
-            System.out.println(obj.get("effectiveDate"));
-            System.out.println(currName + " " + mid);
-
-
             JSONArray outerArray1 = new JSONArray(content.toString());
 
             for(int i = 0; i < 42; i++){
@@ -159,30 +150,14 @@ public class TestJson {
                 for(int j = 0; j < 33; j++){
                     JSONObject rates1 = innerArray1.getJSONObject(j);;
 
-                    if(rates1.getString("code").equals("USD")){
+                    if(rates1.getString("code").equals(chosenCurrency)){
 
                         System.out.println(rates1.getString("currency"));
                         System.out.println(rates1.getDouble("mid") + "\n");
                     }
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
     }
 
 }
