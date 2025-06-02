@@ -1,7 +1,6 @@
 package com.example;
 import org.json.JSONObject;
 
-import java.io.LineNumberReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
@@ -149,17 +148,26 @@ public class TestJson {
             System.out.println(currName + " " + mid);
 
 
+            JSONArray outerArray1 = new JSONArray(content.toString());
 
-            for(int i = 0; i < 10; i++){
-                JSONObject rates1 = innerArray.getJSONObject(i);;
+            for(int i = 0; i < 42; i++){
+                JSONObject obj1 = outerArray1.getJSONObject(i);
+                JSONArray innerArray1 = obj1.getJSONArray("rates");
 
-                if(rates1.getString("code").equals("USD")){
+                System.out.println("\n" + obj1.getString("effectiveDate"));
 
-                    System.out.println(rates1.getString("currency"));
-                    System.out.println(rates1.getDouble("mid"));
+                for(int j = 0; j < 33; j++){
+                    JSONObject rates1 = innerArray1.getJSONObject(j);;
+
+                    if(rates1.getString("code").equals("USD")){
+
+                        System.out.println(rates1.getString("currency"));
+                        System.out.println(rates1.getDouble("mid") + "\n");
+                    }
                 }
-
             }
+
+
 
 
 
