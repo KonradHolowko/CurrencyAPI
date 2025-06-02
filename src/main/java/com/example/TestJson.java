@@ -141,12 +141,27 @@ public class TestJson {
             JSONObject obj = outerArray.getJSONObject(0);
             JSONArray innerArray = obj.getJSONArray("rates");
 
-            for(int i = 0; i < 35; i++){
-                String curName = innerArray.getJSONObject(i).getString("code");
-                if(curName.equals(chosenCurrency)){
-                    System.out.println(curName);
+            JSONObject rates = innerArray.getJSONObject(0);
+            String currName = rates.getString("code");
+            String mid = String.valueOf(rates.getDouble("mid"));
+
+            System.out.println(obj.get("effectiveDate"));
+            System.out.println(currName + " " + mid);
+
+
+
+            for(int i = 0; i < 10; i++){
+                JSONObject rates1 = innerArray.getJSONObject(i);;
+
+                if(rates1.getString("code").equals("USD")){
+
+                    System.out.println(rates1.getString("currency"));
+                    System.out.println(rates1.getDouble("mid"));
                 }
+
             }
+
+
 
 
 
