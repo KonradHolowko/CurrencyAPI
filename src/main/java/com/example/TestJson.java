@@ -1,4 +1,5 @@
 package com.example;
+
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
@@ -9,6 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONArray;
 
@@ -79,13 +84,9 @@ public class TestJson {
 
             String date1 = "2025-03-01";
             String date2 = "2025-05-02";
-            String link = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%s/%s/?format=json", date1, date2);
+            String link = String.format("https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json", date1, date2);
             getCurrencyRate(link);
-
-
-
-
-
+            System.out.println(getCurrencyRate(link));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,11 +99,12 @@ public class TestJson {
         System.out.println(obj.get("mid"));
     }
 
-    public static void getCurrencyRate(String linkToApi){
+    public static HashMap<String, Double> getCurrencyRate(String linkToApi) {
+        HashMap<String, Double> map = new HashMap<>();
 
         StringBuilder content = new StringBuilder();
 
-        try{
+        try {
             URL url = new URL(linkToApi);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -115,8 +117,7 @@ public class TestJson {
             }
             in.close();
             con.disconnect();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -124,39 +125,39 @@ public class TestJson {
 
         //Single date
         String jsonString = content.toString().trim();
-        if(jsonString.startsWith("{")){
+        if (jsonString.startsWith("{")) {
 
             JSONObject outerArray = new JSONObject(content.toString());
             JSONArray innerArray = outerArray.getJSONArray("rates");
             JSONObject obj = innerArray.getJSONObject(0);
 
-            System.out.println("\nCurrency: " + outerArray.get("currency") + " " + outerArray.get("code"));
-            System.out.println("Exchange rate: " + obj.get("mid"));
-            System.out.println("Date: " + obj.get("effectiveDate") + "\n");
+            String s = outerArray.get("code").toString() + "-" + obj.get("effectiveDate").toString();
+            map.put(s, obj.getDouble("mid"));
+            return map;
         }
 
         //Date to date
-        else{
+        else {
             //User must choose which currency to show
             String chosenCurrency = "USD";
             JSONArray outerArray1 = new JSONArray(content.toString());
 
-            for(int i = 0; i < 42; i++){
+            for (int i = 0; i < outerArray1.length(); i++) {
                 JSONObject obj1 = outerArray1.getJSONObject(i);
                 JSONArray innerArray1 = obj1.getJSONArray("rates");
 
-                System.out.println("\n" + obj1.getString("effectiveDate"));
+                for (int j = 0; j < innerArray1.length(); j++) {
+                    JSONObject rates1 = innerArray1.getJSONObject(j);
 
-                for(int j = 0; j < 33; j++){
-                    JSONObject rates1 = innerArray1.getJSONObject(j);;
+                    if (rates1.getString("code").equals(chosenCurrency)) {
 
-                    if(rates1.getString("code").equals(chosenCurrency)){
-
-                        System.out.println(rates1.getString("currency"));
-                        System.out.println(rates1.getDouble("mid") + "\n");
+                        String s = rates1.getString("code") + "-" + obj1.getString("effectiveDate");
+                        map.put(s, rates1.getDouble("mid"));
                     }
+
                 }
             }
+            return map;
         }
     }
 
