@@ -1,11 +1,11 @@
 package com.example;
 
+import java.io.*;
+
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.json.JSONArray;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class TestJson {
@@ -82,7 +80,7 @@ public class TestJson {
 //            https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json
 
 
-            String date1 = "2025-03-01";
+            String date1 = "2025-03-01"; //harcoded for testing purposes
             String date2 = "2025-05-02";
             String link = String.format("https://api.nbp.pl/api/exchangerates/tables/A/2025-03-01/2025-05-01/?format=json", date1, date2);
             getCurrencyRate(link);
@@ -91,6 +89,26 @@ public class TestJson {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        String date1 = "2025-03-01"; //harcoded for testing purposes
+        String date2 = "2025-05-02";
+        String link = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%s/%s/?format=json", date1, date2);
+//        createNewFile(getCurrencyRate(link));
+//        writeToFIle(getCurrencyRate(link),"C:\\Users\\kk\\Desktop\\programming files","file.txt");
+
+       // appendToFile(getCurrencyRate(link),"C:\\Users\\kk\\Desktop\\programming files","file.txt");
+
+        String date3 = "2025-05-01"; //harcoded for testing purposes
+        String date4 = "2025-06-02";
+        String link1 = String.format("https://api.nbp.pl/api/exchangerates/tables/A/%s/%s/?format=json", date3, date4);
+
+
+//        createNewFile("C:\\Users\\kk\\Desktop\\programming files","pliczek");
+        appendToFile(getCurrencyRate(link),"C:\\Users\\kk\\Desktop\\programming files","pliczek");
+
+        appendToFile(getCurrencyRate(link1),"C:\\Users\\kk\\Desktop\\programming files","pliczek");
+
+
     }
 
     public static void show(JSONObject obj) {
@@ -139,7 +157,7 @@ public class TestJson {
         //Date to date
         else {
             //User must choose which currency to show
-            String chosenCurrency = "USD";
+            String chosenCurrency = "USD"; //hardcoded for testing
             JSONArray outerArray1 = new JSONArray(content.toString());
 
             for (int i = 0; i < outerArray1.length(); i++) {
@@ -161,4 +179,56 @@ public class TestJson {
         }
     }
 
+    public static void createNewFile(String path, String fileName){
+
+        String p = String.format(path + fileName + ".txt");
+
+        try{
+            File myObj = new File(p);
+            if(myObj.createNewFile()){
+                System.out.println("File created: " + myObj.getName());
+            }
+            else{
+                System.out.println("file already exists");
+            }
+
+        }
+        catch (Exception e){
+            System.out.println("Error occured");
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeToFIle(HashMap<String, Double> map, String path, String nameFile){ //replaces the contents of the file
+
+        String fullPath = String.format(path + "\\" + nameFile + ".txt");
+
+        try{
+            FileWriter myWriter = new FileWriter(fullPath);
+            myWriter.append(map.toString());
+            myWriter.close();
+            System.out.println("Succesfully wrote to file");
+        }
+        catch (Exception e){
+            System.out.println("Error occured");
+            e.printStackTrace();
+        }
+    }
+
+    public static void appendToFile(HashMap<String, Double> map, String path, String nameFile){
+
+        String fullPath = String.format(path + "\\" + nameFile + ".txt");
+
+        try {
+            FileWriter fw = new FileWriter(fullPath, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(map.toString());
+           // bw.newLine();
+            bw.close();
+        }
+        catch (Exception e){
+            System.out.println("Error occured");
+            e.printStackTrace();
+        }
+    }
 }
