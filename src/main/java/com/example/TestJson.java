@@ -10,10 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.json.JSONArray;
 
@@ -108,16 +105,16 @@ public class TestJson {
 
         appendToFile(getCurrencyRate(link1),"C:\\Users\\kk\\Desktop\\programming files","pliczek");
 
-
+        readFile("C:\\Users\\kk\\Desktop\\programming files\\pliczek.txt");
     }
 
-    public static void show(JSONObject obj) {
+    static void show(JSONObject obj) {
         System.out.println(obj.get("code"));
         System.out.println(obj.get("currency"));
         System.out.println(obj.get("mid"));
     }
 
-    public static HashMap<String, Double> getCurrencyRate(String linkToApi) {
+    static HashMap<String, Double> getCurrencyRate(String linkToApi) {
         HashMap<String, Double> map = new HashMap<>();
 
         StringBuilder content = new StringBuilder();
@@ -179,7 +176,7 @@ public class TestJson {
         }
     }
 
-    public static void createNewFile(String path, String fileName){
+    static void createNewFile(String path, String fileName){
 
         String p = String.format(path + fileName + ".txt");
 
@@ -199,7 +196,7 @@ public class TestJson {
         }
     }
 
-    public static void writeToFIle(HashMap<String, Double> map, String path, String nameFile){ //replaces the contents of the file
+    static void writeToFIle(HashMap<String, Double> map, String path, String nameFile){ //replaces the contents of the file
 
         String fullPath = String.format(path + "\\" + nameFile + ".txt");
 
@@ -215,7 +212,7 @@ public class TestJson {
         }
     }
 
-    public static void appendToFile(HashMap<String, Double> map, String path, String nameFile){
+    static void appendToFile(HashMap<String, Double> map, String path, String nameFile){
 
         String fullPath = String.format(path + "\\" + nameFile + ".txt");
 
@@ -230,5 +227,23 @@ public class TestJson {
             System.out.println("Error occured");
             e.printStackTrace();
         }
+    }
+
+    static void readFile(String path){
+
+        try{
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while(myReader.hasNextLine()){
+                String data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+        }
+        catch (Exception e){
+            System.out.println("Cannot read file");
+            e.printStackTrace();
+        }
+
     }
 }
